@@ -1,0 +1,13 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/bsmg/BSIPA-MetadataFileSchema/master/Schema.json",
+  "id": "SoftRestart",
+  "name": "SoftRestart",
+  "author": "Toni Macaroni",
+  "version": "0.0.1",
+  "description": "The faster way to practice songs",
+  "gameVersion": "1.11.1",
+  "dependsOn": {
+    "BSIPA": "^4.0.5",
+    "BeatSaberMarkupLanguage": "^1.5.0"
+  }
+}
