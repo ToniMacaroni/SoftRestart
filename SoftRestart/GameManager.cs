@@ -161,7 +161,6 @@ namespace SoftRestart
             btn.onClick.AddListener(new UnityAction(onClick));
             Object.Destroy(go.GetComponentInChildren<LocalizedTextMeshProUGUI>());
             go.GetComponentInChildren<TextMeshProUGUI>().text = name;
-
         }
 
         private void OnRestartClick()
@@ -169,6 +168,10 @@ namespace SoftRestart
             _submission.DisableScoreSubmission("Soft Restart", "'Soft Restart' used");
             SeekTo(0, false);
             ResetEnergy();
+
+            _pauseController.HandlePauseMenuManagerDidPressContinueButton();
+
+            DestroyActiveObjects();
 
             _beatmapObjectManager.noteWasCutEvent -= _scoreController.HandleNoteWasCut;
             _beatmapObjectManager.noteWasMissedEvent -= _scoreController.HandleNoteWasMissed;
@@ -187,10 +190,6 @@ namespace SoftRestart
             BaseRawScoreAcc(ref _scoreController) = 0;
             _scoreController.NotifyForChange(true, true);
             _scoreUiController.UpdateScore(0, 0);
-
-            _pauseController.HandlePauseMenuManagerDidPressContinueButton();
-
-            DestroyActiveObjects();
         }
 
         private void OnRestartBookmarkClick()
