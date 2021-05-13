@@ -23,7 +23,7 @@ namespace SoftRestart
         private BasicBeatmapObjectManager _beatmapObjectManager;
         private readonly PluginConfig _config;
         private readonly Submission _submission;
-        private readonly GameEnergyCounter _gameEnergyCounter;
+        private GameEnergyCounter _gameEnergyCounter;
         private ScoreController _scoreController;
         private readonly GameNoteController.Pool _gameNotePool;
         private readonly BombNoteController.Pool _bombNotePool;
@@ -85,6 +85,9 @@ namespace SoftRestart
 
         private static readonly FieldAccessor<ScoreController, int>.Accessor BaseRawScoreAcc =
             FieldAccessor<ScoreController, int>.GetAccessor("_baseRawScore");
+
+        private static readonly FieldAccessor<GameEnergyCounter, bool>.Accessor DidReach0EnergyAcc =
+            FieldAccessor<GameEnergyCounter, bool>.GetAccessor("_didReach0Energy");
 
         #endregion
 
@@ -164,7 +167,7 @@ namespace SoftRestart
         private void OnRestartClick()
         {
             SeekTo(0, false);
-            SetEnergy(0.5f);
+            ResetEnergy();
             _scoreController.Start();
 
             ComboAcc(ref _scoreController) = 0;
@@ -224,6 +227,12 @@ namespace SoftRestart
         {
             var diff = energy - _gameEnergyCounter.energy;
             _gameEnergyCounter.ProcessEnergyChange(diff);
+        }
+
+        private void ResetEnergy()
+        {
+            _gameEnergyCounter.Start();
+            DidReach0EnergyAcc(ref _gameEnergyCounter) = false;
         }
 
         /// <summary>
