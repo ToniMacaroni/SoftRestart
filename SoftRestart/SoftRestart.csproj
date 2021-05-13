@@ -22,7 +22,7 @@
     <DefineConstants>TRACE;DEBUG;RESHARPER</DefineConstants>
 
     <StartAction>Program</StartAction>
-    <StartProgram>Y:\Program Files %28x86%29\Steam\steam.exe</StartProgram>
+    <StartProgram>G:\Program Files %28x86%29\Steam\steam.exe</StartProgram>
     <StartArguments>-applaunch 620980 -vrmode oculus --verbose fpfc</StartArguments>
   </PropertyGroup>
 

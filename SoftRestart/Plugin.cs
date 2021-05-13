@@ -7,7 +7,7 @@ using IPALogger = IPA.Logging.Logger;
 
 namespace SoftRestart
 {
-    [Plugin(RuntimeOptions.SingleStartInit)]
+    [Plugin(RuntimeOptions.DynamicInit)]
     public class Plugin
     {
 
@@ -19,13 +19,13 @@ namespace SoftRestart
             zenjector.OnGame<PluginGameInstaller>();
         }
 
-        [OnStart]
-        public void OnApplicationStart()
+        [OnEnable]
+        public void OnEnable()
         {
         }
 
-        [OnExit]
-        public void OnApplicationQuit()
+        [OnDisable]
+        public void OnDisable()
         {
 
         }
