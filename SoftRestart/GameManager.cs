@@ -4,9 +4,11 @@ using HMUI;
 using IPA.Utilities;
 using Polyglot;
 using SiraUtil.Services;
+using SiraUtil.Tools;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using Zenject;
 using Exception = System.Exception;
 using Object = UnityEngine.Object;
@@ -25,12 +27,11 @@ namespace SoftRestart
         private readonly Submission _submission;
         private GameEnergyCounter _gameEnergyCounter;
         private ScoreController _scoreController;
-        private readonly GameNoteController.Pool _gameNotePool;
-        private readonly BombNoteController.Pool _bombNotePool;
-        private readonly ObstacleController.Pool _obstaclePool;
+        private readonly SiraLog _log;
         private readonly ScoreUIController _scoreUiController;
 
         private NoTransitionsButton _bookmarkButton;
+        private readonly bool _enabled = true;
 
         #region Accessors
 
@@ -89,6 +90,9 @@ namespace SoftRestart
         private static readonly FieldAccessor<GameEnergyCounter, bool>.Accessor DidReach0EnergyAcc =
             FieldAccessor<GameEnergyCounter, bool>.GetAccessor("_didReach0Energy");
 
+        private static readonly FieldAccessor<StandardLevelRestartController, StandardLevelScenesTransitionSetupDataSO>.Accessor SceneSetupDataAcc =
+            FieldAccessor<StandardLevelRestartController, StandardLevelScenesTransitionSetupDataSO>.GetAccessor("_standardLevelSceneSetupData");
+
         #endregion
 
         public GameManager(
@@ -102,8 +106,14 @@ namespace SoftRestart
             Submission submission,
             GameEnergyCounter gameEnergyCounter,
             ScoreController scoreController,
-            GameNoteController.Pool gameNotePool, BombNoteController.Pool bombNotePool, ObstacleController.Pool obstaclePool)
+            SiraLog log, StandardLevelRestartController restartController)
         {
+            if (SceneSetupDataAcc(ref restartController).gameMode == "Replay")
+            {
+                _enabled = false;
+                return;
+            }
+
             _bookmark = bookmark;
             _pauseMenuManager = pauseMenuManager;
             _audioTimeSyncController = audioTimeSyncController;
@@ -114,19 +124,25 @@ namespace SoftRestart
             _submission = submission;
             _gameEnergyCounter = gameEnergyCounter;
             _scoreController = scoreController;
-            _gameNotePool = gameNotePool;
-            _bombNotePool = bombNotePool;
-            _obstaclePool = obstaclePool;
+            _log = log;
             _scoreUiController = Object.FindObjectOfType<ScoreUIController>();
         }
 
         public void Initialize()
         {
+            if (!_enabled)
+            {
+                return;
+            }
+
             try
             {
                 CreateUi();
             }
-            catch(Exception) { }
+            catch (Exception)
+            {
+                _log.Error("Couldn't create Soft Restart UI");
+            }
         }
 
         private void CreateUi()
@@ -171,8 +187,9 @@ namespace SoftRestart
 
             _pauseController.HandlePauseMenuManagerDidPressContinueButton();
 
-            DestroyActiveObjects();
+            DeactivateActiveObjects();
 
+            // unregister events since they are being registered in ScoreController.Start()
             _beatmapObjectManager.noteWasCutEvent -= _scoreController.HandleNoteWasCut;
             _beatmapObjectManager.noteWasMissedEvent -= _scoreController.HandleNoteWasMissed;
 
@@ -198,7 +215,7 @@ namespace SoftRestart
             SeekTo(_bookmark.Time, true);
             _pauseController.HandlePauseMenuManagerDidPressContinueButton();
 
-            DestroyActiveObjects();
+            DeactivateActiveObjects();
         }
 
         private void OnBookmarkClick()
@@ -265,9 +282,9 @@ namespace SoftRestart
         }
 
         /// <summary>
-        /// Destroy active pooled objects so they don't just chill in the back after unpausing
+        /// Deactivate active pooled objects so they don't just chill in the back after unpausing
         /// </summary>
-        private void DestroyActiveObjects()
+        private void DeactivateActiveObjects()
         {
             var notePool = GameNotePoolContainerAcc(ref _beatmapObjectManager);
 
@@ -277,27 +294,18 @@ namespace SoftRestart
 
             foreach (var note in notePool.activeItems)
             {
-                Object.Destroy(note.gameObject);
+                note.gameObject.SetActive(false);
             }
 
             foreach (var bomb in bombPool.activeItems)
             {
-                Object.Destroy(bomb.gameObject);
+                bomb.gameObject.SetActive(false);
             }
 
             foreach (var obstacle in obstaclePool.activeItems)
             {
-                Object.Destroy(obstacle.gameObject);
+                obstacle.gameObject.SetActive(false);
             }
-
-            GameNotePoolContainerAcc(ref _beatmapObjectManager) =
-                new MemoryPoolContainer<GameNoteController>(_gameNotePool);
-
-            BombNotePoolContainerAcc(ref _beatmapObjectManager) =
-                new MemoryPoolContainer<BombNoteController>(_bombNotePool);
-
-            ObstaclePoolContainerAcc(ref _beatmapObjectManager) =
-                new MemoryPoolContainer<ObstacleController>(_obstaclePool);
         }
     }
 }

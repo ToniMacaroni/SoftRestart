@@ -7,11 +7,6 @@ namespace SoftRestart.Installers
     {
         public override void InstallBindings()
         {
-            if (Container.TryResolve<MultiplayerController>() != null)
-            {
-                return;
-            }
-
             Container.Bind<Bookmark>().AsSingle();
             Container.BindInterfacesAndSelfTo<GameManager>().AsSingle();
         }

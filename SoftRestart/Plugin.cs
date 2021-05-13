@@ -15,8 +15,8 @@ namespace SoftRestart
         public Plugin(IPALogger logger, Config conf, Zenjector zenjector)
         {
             var config = conf.Generated<PluginConfig>();
-            zenjector.OnApp<PluginAppInstaller>().WithParameters(config);
-            zenjector.OnGame<PluginGameInstaller>();
+            zenjector.OnApp<PluginAppInstaller>().WithParameters(config, logger);
+            zenjector.OnGame<PluginGameInstaller>().OnlyForStandard();
         }
 
         [OnEnable]
