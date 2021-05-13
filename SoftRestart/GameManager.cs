@@ -166,8 +166,13 @@ namespace SoftRestart
 
         private void OnRestartClick()
         {
+            _submission.DisableScoreSubmission("Soft Restart", "'Soft Restart' used");
             SeekTo(0, false);
             ResetEnergy();
+
+            _beatmapObjectManager.noteWasCutEvent -= _scoreController.HandleNoteWasCut;
+            _beatmapObjectManager.noteWasMissedEvent -= _scoreController.HandleNoteWasMissed;
+
             _scoreController.Start();
 
             ComboAcc(ref _scoreController) = 0;
@@ -231,6 +236,8 @@ namespace SoftRestart
 
         private void ResetEnergy()
         {
+            _beatmapObjectManager.noteWasCutEvent -= _gameEnergyCounter.HandleNoteWasCut;
+            _beatmapObjectManager.noteWasMissedEvent -= _gameEnergyCounter.HandleNoteWasMissed;
             _gameEnergyCounter.Start();
             DidReach0EnergyAcc(ref _gameEnergyCounter) = false;
         }
