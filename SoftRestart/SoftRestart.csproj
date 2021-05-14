@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <OutputType>Library</OutputType>
-        <LangVersion>8.0</LangVersion>
-        <LocalRefsDir Condition="Exists('..\Refs')">..\Refs</LocalRefsDir>
-        <BeatSaberDir>$(LocalRefsDir)</BeatSaberDir>
-        <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
-        <Copyright>Copyright © Toni Macaroni 2021</Copyright>
-        <AssemblyName>SoftRestart</AssemblyName>
-        <RootNamespace>SoftRestart</RootNamespace>
-        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-        <Version>3.0.0</Version>
-        <SignAssembly>false</SignAssembly>
-    </PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <LangVersion>8.0</LangVersion>
+    <LocalRefsDir Condition="Exists('..\Refs')">..\Refs</LocalRefsDir>
+    <BeatSaberDir>$(LocalRefsDir)</BeatSaberDir>
+    <AppOutputBase>$(MSBuildProjectDirectory)\</AppOutputBase>
+    <Copyright>Copyright © Toni Macaroni 2021</Copyright>
+    <AssemblyName>SoftRestart</AssemblyName>
+    <RootNamespace>SoftRestart</RootNamespace>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
 
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -199,7 +199,7 @@
   </ItemGroup>
 
   <ItemGroup>
-  	<None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
+    <None Include="Directory.Build.props" Condition="Exists('Directory.Build.props')" />
     <None Include="Directory.Build.targets" Condition="Exists('Directory.Build.targets')" />
     <None Include="SoftRestart.csproj.user" Condition="Exists('SoftRestart.csproj.user')" />
   </ItemGroup>
