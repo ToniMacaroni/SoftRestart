@@ -25,10 +25,10 @@ namespace SoftRestart.Services
             SpawningStartTimeAcc(ref _callbackController) = t;
         }
 
-        public void UnregisterScoreControllerEvents(ScoreController scoreController)
+        public void Resume()
         {
-            _objectManager.noteWasCutEvent -= scoreController.HandleNoteWasCut;
-            _objectManager.noteWasMissedEvent -= scoreController.HandleNoteWasMissed;
+            _objectManager.HideAllBeatmapObjects(false);
+            _objectManager.PauseAllBeatmapObjects(false);
         }
 
         /// <summary>
