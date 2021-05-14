@@ -113,7 +113,7 @@ namespace SoftRestart
             SeekTo(0, false);
             _gameScoringHandler.ResetEnergy();
 
-            _pauseHandler.Unpause();
+            _pauseHandler.Unpause(true);
 
             _beatmapObjectHandler.DeactivateActiveObjects();
 
