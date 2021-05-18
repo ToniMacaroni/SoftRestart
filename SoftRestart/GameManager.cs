@@ -83,7 +83,7 @@ namespace SoftRestart
 
             var buttons = Object.Instantiate(buttonsTemplate, buttonsTemplate.transform.parent);
             buttons.name = "SRButtons";
-            buttons.GetComponent<RectTransform>().anchoredPosition = new Vector2(-2.5f, -29);
+            buttons.GetComponent<RectTransform>().anchoredPosition = new Vector2(-2.5f, -31);
 
             var t = buttons.transform;
             var menuButton = t.GetChild(0).gameObject;
